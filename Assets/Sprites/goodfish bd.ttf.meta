@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 046e182a9e2872345a982a52568b8afd
+timeCreated: 1505178292
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Goodfish
+  fontNames:
+  - Goodfish
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
