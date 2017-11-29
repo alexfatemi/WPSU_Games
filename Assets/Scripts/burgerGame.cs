@@ -5,17 +5,24 @@ using UnityEngine.UI;
 
 public class burgerGame : MonoBehaviour {
 	public static burgerGame manager;
-	public GameObject[] questions;
+	private int totalQuestions;
+	public burgerQuestion nullQuestion;
+	public burgerQuestion[] questions;
 	private int qNum = 0;
+	public burgerText[] optionText;
 	public Transform[] optionPos;
 	public BoxCollider targetBox;
+	public burgerAnswer answer;
 	private Animator anim;
-	private GameObject question;
 	public AudioClip[] clips;
 	private AudioSource sound;
 	private BoxCollider[] options;
 	public GameObject instructions;
 	public Text startText;
+	private int numCorrect = 0;
+	private int numDone = 0;
+	public Text correctNumber;
+	public Text doneNumber;
 	// Use this for initialization
 	void Awake () {
 		if (manager == null) {
@@ -24,12 +31,13 @@ public class burgerGame : MonoBehaviour {
 			Destroy (gameObject);
 		}
 		optionPos = GetComponentsInChildren<Transform> ();
-		question = Instantiate (questions [qNum], Vector3.zero, Quaternion.identity);
-		anim = question.GetComponentInChildren<Animator> ();
+		anim = GetComponentInChildren<Animator> ();
 		sound = GetComponent<AudioSource> ();
-		options = question.GetComponentsInChildren<BoxCollider> ();
+		options = GetComponentsInChildren<BoxCollider> ();
 		foreach (BoxCollider c in options)
 			c.enabled = false;
+		correctNumber.text = numCorrect.ToString ();
+		doneNumber.text = numDone.ToString ();
 	}
 	
 	// Update is called once per frame
@@ -43,7 +51,7 @@ public class burgerGame : MonoBehaviour {
 	public void startGame(){
 		startText.text = "Back";
 		instructions.SetActive (false);
-		options = question.GetComponentsInChildren<BoxCollider> ();
+		options = GetComponentsInChildren<BoxCollider> ();
 		foreach (BoxCollider c in options)
 			c.enabled = true;
 		sound.Stop ();
@@ -51,7 +59,7 @@ public class burgerGame : MonoBehaviour {
 
 	public void pauseGame(){
 		instructions.SetActive (true);
-		options = question.GetComponentsInChildren<BoxCollider> ();
+		options = GetComponentsInChildren<BoxCollider> ();
 		foreach (BoxCollider c in options)
 			c.enabled = false;
 	}
@@ -73,13 +81,15 @@ public class burgerGame : MonoBehaviour {
 		anim.SetTrigger ("try");
 		sound.clip = clips [0];
 		sound.Play ();
-		yield return new WaitForSeconds (1.5f);
+		yield return new WaitForSeconds (1f);
+		numCorrect++;
+		numDone++;
+		correctNumber.text = numCorrect.ToString ();
+		doneNumber.text = numDone.ToString ();
 		qNum += 1;
 		if (qNum > questions.Length-1)
 			qNum = 0;
-		Destroy (question);
-		question = Instantiate (questions [qNum], Vector3.zero, Quaternion.identity);
-		anim = question.GetComponentInChildren<Animator> ();
+		reloadQuestion (questions [qNum]);
 		yield return null;
 	}
 
@@ -89,13 +99,53 @@ public class burgerGame : MonoBehaviour {
 		sound.clip = clips [1];
 		sound.Play ();
 		yield return new WaitForSeconds (0.5f);
+		numDone++;
+		doneNumber.text = numDone.ToString ();
 		qNum += 1;
 		if (qNum > questions.Length-1)
 			qNum = 0;
-		Destroy (question);
-		question = Instantiate (questions [qNum], Vector3.zero, Quaternion.identity);
-		anim = question.GetComponentInChildren<Animator> ();
+		reloadQuestion (questions [qNum]);
 		yield return null;
 	}
 
+	public void assignVariables (string[] variables){
+		StartCoroutine (assignVariable (variables));
+	}
+
+	private IEnumerator assignVariable(string[] variables) {
+		totalQuestions = int.Parse(variables [0]);
+		questions = new burgerQuestion[totalQuestions];
+		yield return new WaitForEndOfFrame();
+		int index = 1;
+		int q = 0;
+		while (q < totalQuestions) {
+			questions [q] = new burgerQuestion();
+			questions [q].options = new string[3];
+			questions [q].clips = new string[3];
+			int optionNum = 0;
+			while (optionNum < 3) {
+				questions [q].options [optionNum] = variables [index];
+				index++;
+				questions[q].clips[optionNum] = variables [index];
+				index++;
+				optionNum++;
+			}
+			questions[q].answer = int.Parse (variables [index]);
+			index++;
+			q++;
+		}
+		reloadQuestion (questions [0]);
+		yield return null;
+	}
+
+	public void reloadQuestion (burgerQuestion question){
+		int optionNum = 0;
+		while (optionNum < 3) {
+			optionText [optionNum].text = question.options[optionNum];
+			optionText [optionNum].wordWrap ();
+			optionText [optionNum].line.clip = Resources.Load<AudioClip> ("BurgerLines/" + question.clips[optionNum]);
+			optionNum++;
+		}
+		answer.answerNum = question.answer;
+	}
 }

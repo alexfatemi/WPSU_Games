@@ -3,26 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class burgerAnswer : MonoBehaviour {
-	public int answer;
-	// Use this for initialization
-	void Awake () {
-		burgerGame.manager.targetBox = GetComponent<BoxCollider> ();
-	}
-	
-	// Update is called once per frame
+	public int answerNum;
+
 	void Update () {
 		
 	}
 
 	void OnTriggerEnter(Collider other) {
 		//Debug.Log ("Hello");
-		if (other.GetComponent<burgerText> ().optionNumber == answer) {
+		if (other.GetComponent<burgerText> ().optionNumber == answerNum) {
 			//Debug.Log ("Correct");
 			burgerGame.manager.guess (true);
 		} else {
 			//Debug.Log ("Wrong");
 			burgerGame.manager.guess (false);
 		}
-		Destroy (other.gameObject);
 	}
 }

@@ -1,0 +1,8 @@
+7
+|Our dog is fat.|piece0|He eats all the time.|piece1|We need to put him on a diet.|piece2|1
+|Shawn swam in a race last year.|piece3|He swims almost every morning.|piece4|Shawn loves to swim.|piece5|3
+|It rained last night.|piece6|The river got very dirty.|piece7|There were sticks and leaves in it too.|piece8|2
+|The fire alarm is loud.|piece9|It hurts my head.|piece10|I plug my ears when I walk past it.|piece11|1
+|The swimming pool was cold.|piece12|Everyone was shivering.|piece13|I wish the sun would come out.|piece14|1
+|Barry's fishbowl is beautiful.|piece15|It is shaped like a fish.|piece16|It has colorful fish and rocks in it.|piece17|1
+|Noah turned the radio on.|piece18|He danced and sang to the music.|piece19|Noah is always singing and dancing.|piece20|3
